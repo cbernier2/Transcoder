@@ -16,6 +16,7 @@ import com.otaliastudios.transcoder.strategy.size.Size;
 import com.otaliastudios.transcoder.strategy.size.Resizer;
 import com.otaliastudios.transcoder.internal.Logger;
 import com.otaliastudios.transcoder.internal.MediaFormatConstants;
+import com.otaliastudios.transcoder.transcode.internal.VideoDecoderOutput;
 
 import androidx.annotation.NonNull;
 
@@ -288,6 +289,11 @@ public class DefaultVideoStrategy implements TrackStrategy {
                 : options.targetBitRate);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, outBitRate);
         return TrackStatus.COMPRESSING;
+    }
+
+    @Override
+    public void scaleOutput(@NonNull VideoDecoderOutput videoDecoderOutput, float scaleX, float scaleY) {
+        videoDecoderOutput.setScale(scaleX, scaleY);
     }
 
     private boolean checkMimeType(@NonNull List<MediaFormat> formats) {

@@ -4,6 +4,7 @@ import android.media.MediaFormat;
 
 import com.otaliastudios.transcoder.engine.TrackStatus;
 import com.otaliastudios.transcoder.strategy.size.Resizer;
+import com.otaliastudios.transcoder.transcode.internal.VideoDecoderOutput;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,4 +33,6 @@ public interface TrackStrategy {
      */
     @NonNull
     TrackStatus createOutputFormat(@NonNull List<MediaFormat> inputFormats, @NonNull MediaFormat outputFormat);
+
+    void scaleOutput(@NonNull VideoDecoderOutput videoDecoderOutput, float scaleX, float scaleY);
 }
