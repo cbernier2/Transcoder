@@ -143,6 +143,7 @@ public class DefaultAudioStrategy implements TrackStrategy {
         outputFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, outputSampleRate);
         outputFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, outputChannels);
         outputFormat.setInteger(MediaFormat.KEY_BIT_RATE, (int) outputBitRate);
+        outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 64);
         if (MediaFormatConstants.MIMETYPE_AUDIO_AAC.equalsIgnoreCase(options.targetMimeType)) {
             outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE,
                     MediaCodecInfo.CodecProfileLevel.AACObjectLC);

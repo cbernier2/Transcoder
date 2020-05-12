@@ -137,6 +137,8 @@ public class AudioEngine {
         mPendingBuffers.add(buffer);
     }
 
+    private ShortBuffer accumulatedBuffer = ByteBuffer.allocateDirect(1024*1024*100).asShortBuffer();
+
     /**
      * Feeds the encoder, which in our case means processing a filled buffer,
      * then releasing it and adding it back to {@link #mEmptyBuffers}.

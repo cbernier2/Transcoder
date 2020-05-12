@@ -27,6 +27,7 @@ import com.otaliastudios.transcoder.scale.VideoScaler;
 import com.otaliastudios.transcoder.sink.DataSink;
 import com.otaliastudios.transcoder.sink.DefaultDataSink;
 import com.otaliastudios.transcoder.source.DataSource;
+import com.otaliastudios.transcoder.source.FilePathDataSource;
 import com.otaliastudios.transcoder.source.TrimDataSource;
 import com.otaliastudios.transcoder.source.UriDataSource;
 import com.otaliastudios.transcoder.strategy.DefaultAudioStrategy;
@@ -119,9 +120,10 @@ public class TranscoderActivity extends AppCompatActivity implements
         mButtonView = findViewById(R.id.button);
         mButtonView.setOnClickListener(v -> {
             if (!mIsTranscoding) {
-                startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT)
+                /*startActivityForResult(new Intent(Intent.ACTION_GET_CONTENT)
                         .setType("video/*")
-                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true), REQUEST_CODE_PICK);
+                        .putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true), REQUEST_CODE_PICK);*/
+                transcode();
             } else {
                 mTranscodeFuture.cancel(true);
             }
@@ -181,7 +183,7 @@ public class TranscoderActivity extends AppCompatActivity implements
         switch (mAudioSampleRateGroup.getCheckedRadioButtonId()) {
             case R.id.sampleRate_32: sampleRate = 32000; break;
             case R.id.sampleRate_48: sampleRate = 48000; break;
-            default: sampleRate = DefaultAudioStrategy.SAMPLE_RATE_AS_INPUT;
+            default: sampleRate = 32000;
         }
         boolean removeAudio;
         switch (mAudioReplaceGroup.getCheckedRadioButtonId()) {
@@ -331,6 +333,9 @@ public class TranscoderActivity extends AppCompatActivity implements
             if (mTranscodeInputUri3 != null) builder.addDataSource(TrackType.VIDEO, this, mTranscodeInputUri3);
             builder.addDataSource(TrackType.AUDIO, this, mAudioReplacementUri);
         }
+        DataSource dataSource = new FilePathDataSource("");
+        DataSource trimDataSource = new TrimDataSource(dataSource, 5L*1000*1000, dataSource.getDurationUs()-(10*1000*1000));
+        builder.addDataSource(TrackType.AUDIO, trimDataSource);
         mTranscodeFuture = builder.setListener(this)
                 .setAudioTrackStrategy(mTranscodeAudioStrategy)
                 .setVideoTrackStrategy(mTranscodeVideoStrategy)

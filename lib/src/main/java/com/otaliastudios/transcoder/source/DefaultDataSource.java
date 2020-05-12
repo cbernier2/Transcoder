@@ -116,9 +116,19 @@ public abstract class DefaultDataSource implements DataSource {
     public void readTrack(@NonNull Chunk chunk) {
         ensureExtractor();
         int index = mExtractor.getSampleTrackIndex();
-        chunk.bytes = mExtractor.readSampleData(chunk.buffer, 0);
-        chunk.isKeyFrame = (mExtractor.getSampleFlags() & MediaExtractor.SAMPLE_FLAG_SYNC) != 0;
-        chunk.timestampUs = mExtractor.getSampleTime();
+        chunk.bytes = 0;
+        for (int i=0; i<30; i++) {
+            int sampleSize = mExtractor.readSampleData(chunk.buffer, chunk.bytes);
+            chunk.isKeyFrame = chunk.isKeyFrame || (mExtractor.getSampleFlags() & MediaExtractor.SAMPLE_FLAG_SYNC) != 0;
+            if (sampleSize > 0) {
+                chunk.bytes += sampleSize;
+                chunk.timestampUs = mExtractor.getSampleTime();
+                mExtractor.advance();
+            } else {
+                break;
+            }
+        }
+        chunk.buffer.rewind();
         if (mFirstTimestampUs == Long.MIN_VALUE) {
             mFirstTimestampUs = chunk.timestampUs;
         }
@@ -129,7 +139,6 @@ public abstract class DefaultDataSource implements DataSource {
             throw new RuntimeException("Unknown type: " + index);
         }
         mLastTimestampUs.set(type, chunk.timestampUs);
-        mExtractor.advance();
     }
 
     @Override
