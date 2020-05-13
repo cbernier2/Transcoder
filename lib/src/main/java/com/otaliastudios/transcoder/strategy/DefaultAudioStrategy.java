@@ -147,6 +147,7 @@ public class DefaultAudioStrategy implements TrackStrategy {
             outputFormat.setInteger(MediaFormat.KEY_AAC_PROFILE,
                     MediaCodecInfo.CodecProfileLevel.AACObjectLC);
         }
+        outputFormat.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 1024 * 1024);
         return TrackStatus.COMPRESSING;
     }
 

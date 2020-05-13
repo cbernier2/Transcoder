@@ -247,7 +247,7 @@ public class Engine {
 
             private long mLastInterpolatedTime;
             private long mFirstInputTime = Long.MAX_VALUE;
-            private long mTimeBase = timebase + 10;
+            private long mTimeBase = timebase;
 
             @Override
             public long interpolate(@NonNull TrackType type, long time) {
